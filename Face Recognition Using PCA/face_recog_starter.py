@@ -27,17 +27,27 @@ def show_eigenfaces(pca):
 
 
 ## Step 1: Read dataset and visualize it.
-
+df=pd.read_csv("face_data.csv")
+labels=df["target"]
+pixels=df.drop(["target"])
+#show_original_images(pixels)
 ## Step 2: Split Dataset into training and testing
-
+x_train,x_test,y_train,y_test=train_test_split(pixels,labels)# x-pixels,  y-labels
 ## Step 3: Perform PCA.
-
+pca=PCA(n_components=200).fit(x_train)
+#amount of variance
+plt.plot(np.cumsum(pca.explained_variance_ratio_))
+plt.show()
+show_eigenfaces(pca)
 ## Step 4: Project Training data to PCA
-
+X-train_pca=pca.transform(x_train)
 ##############
 
 ## Step 5: Initialize Classifer and fit training data
-
+clf=SVC(kernel='rbf',C=1000,gamma=0.01 )
+clf=clf.fit(x_train_pca,y_train)
 ## Step 6: Perform testing and get classification report
+x_test_pca=pca.transform(x_test)
+y_pred=clf.predict(x_test_pca)
 
 
